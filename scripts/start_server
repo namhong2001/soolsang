@@ -1,4 +1,4 @@
 #!/bin/bash
 cd /home/ec2-user/app
 export PORT=80
-npm run start &
+pm2 start npm --name "soolsang" -- start
