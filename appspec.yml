@@ -2,11 +2,11 @@ version: 0.0
 os: linux
 files:
   - source: /.nuxt/
-    destination: ~/app/.nuxt
+    destination: /home/ec2-user/app/.nuxt
   - source: /static/
-    destination: ~/app/static
+    destination: /home/ec2-user/app/static
   - source: /package.json
-    destination: ~/app
+    destination: /home/ec2-user/app
 hooks:
   AfterInstall:
     - location: scripts/install_dependencies
