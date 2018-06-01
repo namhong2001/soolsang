@@ -1,0 +1,4 @@
+#!/bin/bash
+cd ~/app
+export PORT=80
+npm run start
