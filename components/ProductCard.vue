@@ -1,7 +1,7 @@
 <template>
 <nuxt-link :to="`/detail/${id}`">
   <el-card class="product-card">
-    <div class="image-area" :style="{ backgroundImage: `url(${imgSrc})` }">
+    <div class="image-area" :style="{ backgroundImage: `url(${image})` }">
       <div class="alcohol">{{alcohol}}</div>
       <div class="sub-info">
         <p class="ingredient">{{ingredient}}</p>
@@ -14,8 +14,6 @@
       <p class="company-name">{{companyName}}</p>
       <el-rate v-model="rateValue" disabled></el-rate>
     </div>
-    <div class="rating">
-    </div>
   </el-card>
 </nuxt-link>
 </template>
@@ -23,7 +21,17 @@
 <script>
 export default {
   name: "product",
-  props: ["imgSrc", "productName", "volume", "companyName", "price", "rate", "ingredient", "alcohol", "id"],
+  props: [
+    "image",
+    "productName",
+    "volume",
+    "companyName",
+    "price",
+    "rate",
+    "ingredient",
+    "alcohol",
+    "id"
+  ],
 
   data() {
     return {

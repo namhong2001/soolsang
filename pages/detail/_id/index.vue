@@ -25,7 +25,7 @@
     </section>
     <section id="question-section">
       <div id="question-area">
-        <question v-for="question in testQuestions" v-bind="question" :key="question.id"></question>
+        <question v-for="question in questions" v-bind="question" :key="question.id"></question>
       </div>
       <el-input class="new-question" type="textarea" :autosize="{minRows: 5, maxRows: 10}"
                 v-model="newQuestion" placeholder="질문은 여기에 써주세요!"></el-input>
@@ -53,11 +53,11 @@
         <span class="volume">{{volume}}ml</span>
       </div>
       <section class="tastes">
-        <range-filter v-bind="taste.alchol" class="range-filter"></range-filter>
-        <range-filter v-bind="taste.sweet" class="range-filter"></range-filter>
-        <range-filter v-bind="taste.bitter" class="range-filter"></range-filter>
-        <range-filter v-bind="taste.sour" class="range-filter"></range-filter>
-        <range-filter v-bind="taste.aroma" class="range-filter"></range-filter>
+        <range-filter name="alcohol" type="indicator" :value="alcohol" :disabled="true" class="range-filter"></range-filter>
+        <range-filter name="sweet" type="indicator" :value="sweet" :disabled="true" class="range-filter"></range-filter>
+        <range-filter name="bitter" type="indicator" :value="bitter" :disabled="true" class="range-filter"></range-filter>
+        <range-filter name="sour" type="indicator" :value="sour" :disabled="true" class="range-filter"></range-filter>
+        <range-filter name="aroma" type="indicator" :value="aroma" :disabled="true" class="range-filter"></range-filter>
       </section>
 
       <ul class="side-nav">
@@ -100,133 +100,38 @@ export default {
   data() {
     return {
       newQuestion: "",
-      testQuestions: [
-        {
-          id: 1,
-          questionDate: "2018.01.02",
-          questionContent: "배송일이 언제인가요?",
-          answerDate: "2018.01.02",
-          answerContent: "오늘 발송해드렸습니다. 통상 내일 도착합니다. 송장번호 확인해 주세요"
-        }
-      ],
-      reviews: [
-        {
-          id: 1,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 2,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 3,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 4,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 5,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 6,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 7,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 8,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 9,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        },
-        {
-          id: 10,
-          rate: 4,
-          title: "좋아요",
-          submitDate: "2018.01.12",
-          content: "맛있고 잘 샀습니다. 또 구매할 것 같아요"
-        }
-      ],
-      image: require("assets/test-product-image.jpg"),
       quantity: 1,
-      price: 34200,
-      companyName: "배상면주가",
-      productName: "한산소곡주",
-      alcohol: "17",
-      ingredient: "쌀",
-      volume: 340,
-      currentSectionIndex: 0,
-      taste: {
-        alchol: {
-          label: "도수",
-          bounds: [0, 50],
-          value: 30,
-          disabled: true
-        },
-        sweet: {
-          label: "단맛",
-          bounds: [0, 5],
-          value: 3,
-          disabled: true
-        },
-        bitter: {
-          label: "쓴맛",
-          bounds: [0, 5],
-          value: 2,
-          disabled: true
-        },
-        sour: {
-          label: "신맛",
-          bounds: [0, 5],
-          value: 4,
-          disabled: true
-        },
-        aroma: {
-          label: "향",
-          bounds: [0, 5],
-          value: 1,
-          disabled: true
-        }
-      },
-      deliveryCharge: 3500,
-      freeDeliveryMoney: 11000
+      currentSectionIndex: 0
     };
   },
   computed: {
+    questions() {
+      return this.$store.getters.getQuestionsByProductId(this.$route.params.id);
+    },
+    reviews() {
+      return this.$store.getters.getReviewsByProductId(this.$route.params.id);
+    },
+    ...[
+      "image",
+      "price",
+      "companyName",
+      "productName",
+      "alcohol",
+      "ingredient",
+      "volume",
+      "alcohol",
+      "sweet",
+      "bitter",
+      "sour",
+      "aroma",
+      "deliveryCharge",
+      "freeDeliveryMoney"
+    ].reduce((prev, cur) => {
+      prev[cur] = function() {
+        return this.$store.state.products[0][cur];
+      };
+      return prev;
+    }, {}),
     contentOffsets() {
       let ret = [];
       ret.push(document.getElementById("image-section").offsetTop);
@@ -252,11 +157,13 @@ export default {
       console.log("add to cart ", val);
     },
     handleWindowScroll() {
-      let h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      let h =
+        window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       let doc = document.documentElement;
       let top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
       let next = this.contentOffsets.find(pos => pos > top + h / 2);
-      this.currentSectionIndex = (next ? this.contentOffsets.indexOf(next) : this.contentOffsets.length) - 1;
+      this.currentSectionIndex =
+        (next ? this.contentOffsets.indexOf(next) : this.contentOffsets.length) - 1;
     }
   }
 };

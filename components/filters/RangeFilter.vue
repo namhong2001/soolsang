@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  props: ["label", "bounds", "step", "value", "disabled", "isRange"],
+  props: ["value", "disabled", "isRange", "name", "type"],
   mounted() {
     if (this.disabled) {
       this.$nextTick(() => {
@@ -16,10 +16,32 @@ export default {
       });
     }
   },
-  data() {
-    return {
-      rangeValue: this.value || this.bounds.slice()
-    };
+  computed: {
+    label() {
+      return this.$store.state.filter[this.name].label;
+    },
+    bounds() {
+      return this.$store.state.filter[this.name].bounds;
+    },
+    rangeValue: {
+      get() {
+        if (this.type === "filter") {
+          return this.$store.state.filter[this.name].value;
+        } else if (this.type === "indicator") {
+          return this.value || 0;
+        }
+      },
+      set(val) {
+        if (this.type === "filter") {
+          this.$store.commit("updateFilter", {
+            [this.name]: val
+          });
+        }
+      }
+    },
+    step() {
+      return this.$store.state.filter[this.name].step || 1;
+    }
   },
   methods: {
     handleSliderChange() {
