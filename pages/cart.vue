@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import Minitaste from "@/components/Minitaste";
+import MiniTaste from "@/components/MiniTaste";
 export default {
   components: {
     Minitaste
