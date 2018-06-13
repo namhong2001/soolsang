@@ -67,6 +67,25 @@ const createStore = () => {
           aroma: 1,
           deliveryCharge: 3500,
           freeDeliveryMoney: 11000
+        },
+        {
+          id: 2,
+          image: require("assets/test-product-image.jpg"),
+          price: 19900,
+          companyName: "우리집",
+          productName: "남훈막걸리",
+          category: "탁주",
+          ingredient: "쌀",
+          makeTimes: "이양주",
+          volume: 500,
+          rate: 2,
+          alcohol: 5,
+          sweet: 2,
+          bitter: 1,
+          sour: 1,
+          aroma: 3,
+          deliveryCharge: 2000,
+          freeDeliveryMoney: 20000
         }
       ],
       reviews: {
@@ -153,7 +172,17 @@ const createStore = () => {
             answerContent: "오늘 발송해드렸습니다. 통상 내일 도착합니다. 송장번호 확인해 주세요"
           }
         ]
-      }
+      },
+      cartItems: [
+        {
+          productId: 1,
+          quantity: 2
+        },
+        {
+          productId: 2,
+          quantity: 1
+        }
+      ]
     },
     getters: {
       filteredProducts(state) {
@@ -163,22 +192,53 @@ const createStore = () => {
         let filter = state.filter;
         return state.products.filter(
           (cur, idx, arr) =>
-            filter.category.value.includes(cur.category) &&
-            filter.ingredient.value.includes(cur.ingredient) &&
-            filter.makeTimes.value.includes(cur.makeTimes) &&
+            filter.category.value.indexOf(cur.category) > -1 &&
+            filter.ingredient.value.indexOf(cur.ingredient) > -1 &&
+            filter.makeTimes.value.indexOf(cur.makeTimes) > -1 &&
             inRange(filter.alcohol.value, cur.alcohol) &&
             inRange(filter.sweet.value, cur.sweet) &&
             inRange(filter.bitter.value, cur.bitter) &&
             inRange(filter.sour.value, cur.sour) &&
             inRange(filter.aroma.value, cur.aroma) &&
-            cur.productName.includes(filter.searchString)
+            cur.productName.indexOf(filter.searchString) > -1
         );
       },
       getQuestionsByProductId: state => id => {
+        console.debug("getQuestionsByProductId called");
         return state.questions[id];
       },
       getReviewsByProductId: state => id => {
+        console.debug("getReviewsByProductId called");
         return state.reviews[id];
+      },
+      getProductById: state => id => {
+        console.debug("getProductById called");
+        return state.products.find(cur => cur.id == id);
+      },
+      getCartProducts(state) {
+        // TODO: sort should be guaranteed at fetch or update.
+        state.cartItems.sort((a, b) => (a.productId < b.productId ? -1 : 1));
+        state.products.sort((a, b) => (a.id < b.id ? -1 : 1));
+        let cartItems = state.cartItems;
+        let products = state.products;
+        let cartIdx = 0;
+        let productIdx = 0;
+        let ret = [];
+        while (cartIdx < cartItems.length && productIdx < products.length) {
+          let curId = cartItems[cartIdx].productId;
+          while (productIdx < products.length) {
+            if (products[productIdx].id == curId) {
+              let item = products[productIdx];
+              item.quantity = cartItems[cartIdx].quantity;
+              item.checked = true;
+              ret.push(item);
+              break;
+            }
+            ++productIdx;
+          }
+          ++cartIdx;
+        }
+        return ret;
       }
     },
     // TODO: refactoring
@@ -193,6 +253,9 @@ const createStore = () => {
               : payload[key];
           }
         }
+      },
+      updateCartItem(state, payload) {
+        state.cartItems.find(cur => cur.productId == payload.productId).quantity = payload.quantity;
       }
     },
     actions: {}

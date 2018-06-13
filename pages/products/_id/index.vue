@@ -1,5 +1,5 @@
 <template>
-<el-container class="main">
+<el-container class="detail">
   <el-main>
     <section id="image-section">
       <div class="image-container">
@@ -101,7 +101,8 @@ export default {
     return {
       newQuestion: "",
       quantity: 1,
-      currentSectionIndex: 0
+      currentSectionIndex: 0,
+      ...this.$store.getters.getProductById(this.$route.params.id)
     };
   },
   computed: {
@@ -111,27 +112,6 @@ export default {
     reviews() {
       return this.$store.getters.getReviewsByProductId(this.$route.params.id);
     },
-    ...[
-      "image",
-      "price",
-      "companyName",
-      "productName",
-      "alcohol",
-      "ingredient",
-      "volume",
-      "alcohol",
-      "sweet",
-      "bitter",
-      "sour",
-      "aroma",
-      "deliveryCharge",
-      "freeDeliveryMoney"
-    ].reduce((prev, cur) => {
-      prev[cur] = function() {
-        return this.$store.state.products[0][cur];
-      };
-      return prev;
-    }, {}),
     contentOffsets() {
       let ret = [];
       ret.push(document.getElementById("image-section").offsetTop);
@@ -170,77 +150,77 @@ export default {
 </script>
 
 <style lang="scss">
-.main {
-  width: 1280px;
+.detail {
+  width: 100%;
   max-width: 1280px;
   margin: auto;
-}
-.new-question {
-  margin: 10px 0;
-}
-.submit-question {
-  float: right;
-  &::after {
-    content: "";
-    clear: both;
-    display: table;
+  .new-question {
+    margin: 10px 0;
   }
-}
-.image-container {
-  width: 100%;
-  .image {
-    display: block;
-    margin: auto;
-    width: 80%;
-    height: 80%;
+  .submit-question {
+    float: right;
+    &::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
   }
-}
-.mini-nav {
-  text-align: right;
-  margin-top: 20px;
-  > a {
-    margin: 0 5px;
-    text-decoration: underline;
-    color: #3e658e;
+  .image-container {
+    width: 100%;
+    .image {
+      display: block;
+      margin: auto;
+      width: 80%;
+      height: 80%;
+    }
   }
-}
-.hr {
-  margin: 20px 0;
-}
-.el-aside {
-  position: relative;
-  .aside-container {
-    position: fixed;
+  .mini-nav {
+    text-align: right;
+    margin-top: 20px;
+    > a {
+      margin: 0 5px;
+      text-decoration: underline;
+      color: #3e658e;
+    }
+  }
+  .hr {
+    margin: 20px 0;
+  }
+  .el-aside {
+    position: relative;
+    .aside-container {
+      position: fixed;
+      > * {
+        margin: 5px 0;
+      }
+    }
+  }
+  .price {
+    font-size: 3em;
+    color: orangered;
+    margin: 10px 0;
+  }
+  .company-name {
+    font-size: 0.8em;
+  }
+  .product-name {
+    font-size: 1.6em;
+    color: black;
+  }
+  .side-nav {
+    list-style-type: none;
+    padding: 0;
     > * {
-      margin: 5px 0;
+      &.active {
+        font-size: 1.2em;
+      }
     }
+    margin: 5px 0;
   }
-}
-.price {
-  font-size: 3em;
-  color: orangered;
-  margin: 10px 0;
-}
-.company-name {
-  font-size: 0.8em;
-}
-.product-name {
-  font-size: 1.6em;
-  color: black;
-}
-.side-nav {
-  list-style-type: none;
-  padding: 0;
-  > * {
-    &.active {
-      font-size: 1.2em;
-    }
+  .delivery-charge-section {
+    font-size: 0.9em;
+    font-style: italic;
+    color: gray;
   }
-  margin: 5px 0;
-}
-.delivery-charge-section {
-  font-size: 0.9em;
-  font-style: italic;
-  color: gray;
 }
 </style>

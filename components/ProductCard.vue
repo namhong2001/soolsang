@@ -1,5 +1,5 @@
 <template>
-<nuxt-link :to="`/detail/${id}`">
+<nuxt-link :to="`/products/${id}`">
   <el-card class="product-card">
     <div class="image-area" :style="{ backgroundImage: `url(${image})` }">
       <div class="alcohol">{{alcohol}}</div>
