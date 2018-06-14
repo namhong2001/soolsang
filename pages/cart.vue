@@ -83,6 +83,11 @@
 import MiniTaste from "@/components/MiniTaste";
 export default {
   name: "cart",
+  data() {
+    return {
+      products: this.$store.getters.getCartProducts
+    };
+  },
   components: {
     MiniTaste
   },
@@ -97,9 +102,6 @@ export default {
     },
     isIndeterminate() {
       return !this.products.every(cur => cur.checked) && !this.products.every(cur => !cur.checked);
-    },
-    products() {
-      return this.$store.getters.getCartProducts;
     },
     totalProductPrice() {
       return this.products.reduce((prev, cur) => prev + cur.price * cur.quantity * cur.checked, 0);

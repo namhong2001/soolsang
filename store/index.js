@@ -228,7 +228,7 @@ const createStore = () => {
           let curId = cartItems[cartIdx].productId;
           while (productIdx < products.length) {
             if (products[productIdx].id == curId) {
-              let item = products[productIdx];
+              let item = Object.assign({}, products[productIdx]);
               item.quantity = cartItems[cartIdx].quantity;
               item.checked = true;
               ret.push(item);
