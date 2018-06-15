@@ -2,9 +2,7 @@
 <el-tooltip :content="label" placement="top" :disabled="!showToolTip">
   <div class="mini-taste" @mouseover="showToolTip = true" @mouseout="showToolTip = false">
     <img :src="image" class="image">
-    <!-- <span class="mini-taste">{{label}} -->
-      <sub class="value">{{value}}</sub>
-    <!-- </span> -->
+    <sub class="value">{{value}}</sub>
   </div>
 </el-tooltip>
 </template>

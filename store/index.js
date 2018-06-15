@@ -63,7 +63,7 @@ const createStore = () => {
           alcohol: 17,
           sweet: 3,
           bitter: 2,
-          sour: 4,
+          sour: 5,
           aroma: 1,
           deliveryCharge: 3500,
           freeDeliveryMoney: 11000
@@ -80,7 +80,7 @@ const createStore = () => {
           volume: 500,
           rate: 2,
           alcohol: 5,
-          sweet: 2,
+          sweet: 4,
           bitter: 1,
           sour: 1,
           aroma: 3,
@@ -256,6 +256,10 @@ const createStore = () => {
       },
       updateCartItem(state, payload) {
         state.cartItems.find(cur => cur.productId == payload.productId).quantity = payload.quantity;
+      },
+      deleteCartItem(state, id) {
+        let targetIndex = state.cartItems.findIndex(cur => cur.productId == id);
+        state.cartItems.splice(targetIndex, 1);
       }
     },
     actions: {}

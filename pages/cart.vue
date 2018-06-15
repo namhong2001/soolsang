@@ -10,6 +10,7 @@
         <th>수량</th>
         <th>상품금액<small>(원)</small></th>
         <th>배송비<small>(원)</small></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -52,9 +53,12 @@
         <td class="delivery-charge">
           <p>{{product.deliveryCharge | currency}}</p>
         </td>
+        <td class="delete-button-container">
+          <el-button type="danger" icon="el-icon-delete" circle class="delete-button" @click="deleteItem(product.id)"></el-button>
+        </td>
       </tr>
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <div class="total">
             <div>
               <p>총 상품 가격</p>
@@ -72,6 +76,7 @@
             </div>
           </div>
         </td>
+
       </tr>
     </tbody>
   </table>
@@ -83,15 +88,13 @@
 import MiniTaste from "@/components/MiniTaste";
 export default {
   name: "cart",
-  data() {
-    return {
-      products: this.$store.getters.getCartProducts
-    };
-  },
   components: {
     MiniTaste
   },
   computed: {
+    products() {
+      return this.$store.getters.getCartProducts;
+    },
     checkAll: {
       get() {
         return this.products.every(cur => cur.checked);
@@ -119,6 +122,9 @@ export default {
         productId: id,
         quantity: val
       });
+    },
+    deleteItem(id) {
+      this.$store.commit("deleteCartItem", id);
     }
   }
 };
@@ -177,15 +183,18 @@ export default {
   .delivery-charge {
     font-size: 1.3em;
   }
+  .delete-button {
+    padding: 7px;
+  }
   .total {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    font-size: 1.2em;
+    font-size: 1.1em;
     .total-product-price,
     .total-delivery-charge,
     .total-price {
-      font-size: 1.4em;
+      font-size: 1.8em;
     }
     .total-price {
       color: orangered;
