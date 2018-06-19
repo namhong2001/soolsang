@@ -12,7 +12,7 @@
       <hr class="hr">
     </section>
     <section id="description-section">
-      <div class="description-area">
+      <div class="description-area" v-html="productInfo">
         <!-- 양조장에서 올린 html 바로 넣기 -->
       </div>
       <hr class="hr">
@@ -40,7 +40,7 @@
         <p>배송비: {{deliveryCharge | currency}}원</p>
         <p v-if="freeDeliveryMoney">{{freeDeliveryMoney | currency}}원 이상시 무료</p>
       </section>
-      <el-input-number class="quantity" v-model="quantity" :min="1" @change="handleQuantityChange" size="mini"></el-input-number>
+      <el-input-number class="quantity" v-model="quantity" :min="1" size="mini"></el-input-number>
       <div class="buying-buttons">
         <el-button class="direct-buy" type="success" @click="buyNow">바로구매</el-button>
         <el-button class="add-to-cart" type="primary" @click="addToCart">장바구니</el-button>
@@ -127,14 +127,32 @@ export default {
       // use newQuestion
       console.log("upload new question : ", this.newQuestion);
     },
-    handleQuantityChange(quantity) {
-      console.log(quantity);
+    buyNow() {
+      this.$store.commit("updateCheckout", [
+        {
+          productId: this.id,
+          quantity: this.quantity
+        }
+      ]);
+      this.$router.push("/checkout");
     },
-    buyNow(val) {
-      console.log("buy now ", val);
-    },
-    addToCart(val) {
-      console.log("add to cart ", val);
+    addToCart() {
+      let cartItems = this.$store.state.cartItems;
+      if (cartItems.find(cur => cur.productId == this.id)) {
+        this.$notify.error({
+          title: "Error",
+          message: "이미 장바구니에 담겨 있습니다."
+        });
+      } else {
+        this.$store.commit("addCartItem", {
+          productId: this.id,
+          quantity: this.quantity
+        });
+        this.$notify.success({
+          title: "Success",
+          message: "장바구니에 담았습니다."
+        });
+      }
     },
     handleWindowScroll() {
       let h =
@@ -154,6 +172,13 @@ export default {
   width: 100%;
   max-width: 1280px;
   margin: auto;
+  .description-area {
+    padding: 20px;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
   .new-question {
     margin: 10px 0;
   }

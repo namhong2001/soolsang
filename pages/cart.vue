@@ -132,7 +132,7 @@ export default {
         quantity: cur.quantity
       }));
       this.$store.commit("updateCheckout", items);
-      this.$router.push("checkout");
+      this.$router.push("/checkout");
     }
   }
 };
