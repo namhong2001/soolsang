@@ -65,13 +65,15 @@ a {
 
 #global-header {
   .header-contents {
-    background-color: white;
-    width: calc(100%-40px);
+    width: 100%;
     height: inherit;
     display: flex;
     align-items: center;
+    background-color: white;
     position: fixed;
     z-index: 1;
+    margin: 0 -20px;
+    padding: 0 20px;
   }
 }
 

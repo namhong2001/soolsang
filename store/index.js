@@ -182,7 +182,54 @@ const createStore = () => {
           productId: 2,
           quantity: 1
         }
-      ]
+      ],
+      checkoutItems: [
+        {
+          productId: 1,
+          quantity: 2
+        },
+        {
+          productId: 2,
+          quantity: 1
+        }
+      ],
+      user: null,
+      buyers: [
+        {
+          id: 1,
+          name: "정남훈",
+          phoneNumber: "010-5056-1149",
+          address: "서울시 송파구 삼전동 176-11 401호",
+          isDefault: true
+        },
+        {
+          id: 2,
+          name: "정미경",
+          phoneNumber: "010-1111-3154",
+          address: "서울시 송파구 삼전동 176-11 402호",
+          isDefault: false
+        }
+      ],
+      currentBuyerId: 1,
+      addresses: [
+        {
+          id: 1,
+          title: "집",
+          name: "정남훈",
+          phoneNumber: "010-5056-1149",
+          address: "서울시 송파구 삼전동 176-11 401호",
+          isDefault: false
+        },
+        {
+          id: 2,
+          title: "회사",
+          name: "정남훈",
+          phoneNumber: "010-1111-3154",
+          address: "서울시 송파구 삼전동 176-11 402호",
+          isDefault: false
+        }
+      ],
+      currentAddressId: null
     },
     getters: {
       filteredProducts(state) {
@@ -216,9 +263,7 @@ const createStore = () => {
         return state.products.find(cur => cur.id == id);
       },
       getCartProducts(state) {
-        // TODO: sort should be guaranteed at fetch or update.
-        state.cartItems.sort((a, b) => (a.productId < b.productId ? -1 : 1));
-        state.products.sort((a, b) => (a.id < b.id ? -1 : 1));
+        // products and cartItems should be sorted by id
         let cartItems = state.cartItems;
         let products = state.products;
         let cartIdx = 0;
@@ -239,6 +284,58 @@ const createStore = () => {
           ++cartIdx;
         }
         return ret;
+      },
+      checkoutProducts(state) {
+        // products and checkoutItems should be sorted by id
+        let checkoutItems = state.checkoutItems;
+        let products = state.products;
+        let checkoutIdx = 0;
+        let productIdx = 0;
+        let ret = [];
+        while (checkoutIdx < checkoutItems.length && productIdx < products.length) {
+          let curId = checkoutItems[checkoutIdx].productId;
+          while (productIdx < products.length) {
+            if (products[productIdx].id == curId) {
+              let item = Object.assign({}, products[productIdx]);
+              item.quantity = checkoutItems[checkoutIdx].quantity;
+              ret.push(item);
+              break;
+            }
+            ++productIdx;
+          }
+          ++checkoutIdx;
+        }
+        return ret;
+      },
+      currentBuyer(state) {
+        if (state.currentBuyerId) {
+          return state.buyers.find(buyer => buyer.id == state.currentBuyerId);
+        } else {
+          return state.buyers.find(buyer => buyer.isDefault);
+        }
+      },
+      addresses(state, getters) {
+        let ret = [];
+        let sameToBuyer = {
+          ...getters.currentBuyer,
+          id: 0,
+          title: "구매자와 동일",
+          isDefault: false
+        };
+        ret.push(sameToBuyer);
+        state.addresses.forEach(cur => ret.push({ ...cur }));
+        return ret;
+      },
+      currentAddress(state, getters) {
+        let defaultAddress = getters.addresses.find(address => address.isDefault);
+
+        if (state.currentAddressId != undefined && state.currentAddressId != null) {
+          return getters.addresses.find(address => address.id == state.currentAddressId);
+        } else if (defaultAddress) {
+          return defaultAddress;
+        } else {
+          return getters.addresses[0];
+        }
       }
     },
     // TODO: refactoring
@@ -260,6 +357,57 @@ const createStore = () => {
       deleteCartItem(state, id) {
         let targetIndex = state.cartItems.findIndex(cur => cur.productId == id);
         state.cartItems.splice(targetIndex, 1);
+      },
+      updateCheckout(state, payload) {
+        state.checkoutItems = payload;
+      },
+      updateUser(state, payload) {
+        state.user = payload;
+      },
+      updateCurrentBuyerId(state, id) {
+        state.currentBuyerId = id;
+      },
+      addBuyer(state, payload) {
+        let newBuyer = {
+          id: Number(state.buyers[state.buyers.length - 1].id) + 1,
+          ...payload
+        };
+        if (payload.isDefault) {
+          state.buyers.forEach(item => (item.isDefault = false));
+        }
+        state.buyers.push(newBuyer);
+      },
+      updateBuyer(state, payload) {
+        let buyer = state.buyers.find(cur => cur.id == payload.id);
+        if (payload.isDefault) {
+          state.buyers.forEach(item => (item.isDefault = false));
+        }
+        Object.assign(buyer, payload);
+      },
+      updateCurrentAddressId(state, id) {
+        state.currentAddressId = id;
+      },
+      addAddress(state, payload) {
+        let newAddress = {
+          id: Number(state.addresses[state.addresses.length - 1].id) + 1,
+          ...payload
+        };
+        if (payload.isDefault) {
+          state.addresses.forEach(item => (item.isDefault = false));
+        }
+        state.addresses.push(newAddress);
+      },
+      updateAddress(state, payload) {
+        let address = state.addresses.find(cur => cur.id == payload.id);
+        if (payload.isDefault) {
+          state.addresses.forEach(item => (item.isDefault = false));
+        }
+        Object.assign(address, payload);
+      },
+      signUp(state, payload) {
+        this.state.user = {
+          email: payload.email
+        };
       }
     },
     actions: {}

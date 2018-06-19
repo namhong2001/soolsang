@@ -80,7 +80,7 @@
       </tr>
     </tbody>
   </table>
-  <el-button type="primary" class="buy-now-button" size="medium">결제하기</el-button>
+  <el-button type="primary" class="buy-now-button" size="medium" @click="checkout">결제하기</el-button>
 </div>
 </template>
 
@@ -125,6 +125,14 @@ export default {
     },
     deleteItem(id) {
       this.$store.commit("deleteCartItem", id);
+    },
+    checkout() {
+      let items = this.products.filter(cur => cur.checked).map(cur => ({
+        productId: cur.id,
+        quantity: cur.quantity
+      }));
+      this.$store.commit("updateCheckout", items);
+      this.$router.push("checkout");
     }
   }
 };
