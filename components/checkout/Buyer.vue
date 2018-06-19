@@ -86,7 +86,7 @@ export default {
       return this.$store.state.buyers;
     },
     currentBuyer() {
-      return this.$store.getters.currentBuyer;
+      return this.$store.getters.currentBuyer || {};
     }
   }
 };

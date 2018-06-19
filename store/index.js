@@ -2591,50 +2591,50 @@ const createStore = () => {
         // }
       ],
       checkoutItems: [
-        {
-          productId: 1,
-          quantity: 2
-        },
-        {
-          productId: 2,
-          quantity: 1
-        }
+        // {
+        //   productId: 1,
+        //   quantity: 2
+        // },
+        // {
+        //   productId: 2,
+        //   quantity: 1
+        // }
       ],
       user: null,
       buyers: [
-        {
-          id: 1,
-          name: "정남훈",
-          phoneNumber: "010-5056-1149",
-          address: "서울시 송파구 삼전동 176-11 401호",
-          isDefault: true
-        },
-        {
-          id: 2,
-          name: "정미경",
-          phoneNumber: "010-1111-3154",
-          address: "서울시 송파구 삼전동 176-11 402호",
-          isDefault: false
-        }
+        // {
+        //   id: 1,
+        //   name: "정남훈",
+        //   phoneNumber: "010-5056-1149",
+        //   address: "서울시 송파구 삼전동 176-11 401호",
+        //   isDefault: true
+        // },
+        // {
+        //   id: 2,
+        //   name: "정미경",
+        //   phoneNumber: "010-1111-3154",
+        //   address: "서울시 송파구 삼전동 176-11 402호",
+        //   isDefault: false
+        // }
       ],
-      currentBuyerId: 1,
+      currentBuyerId: null,
       addresses: [
-        {
-          id: 1,
-          title: "집",
-          name: "정남훈",
-          phoneNumber: "010-5056-1149",
-          address: "서울시 송파구 삼전동 176-11 401호",
-          isDefault: false
-        },
-        {
-          id: 2,
-          title: "회사",
-          name: "정남훈",
-          phoneNumber: "010-1111-3154",
-          address: "서울시 송파구 삼전동 176-11 402호",
-          isDefault: false
-        }
+        // {
+        //   id: 1,
+        //   title: "집",
+        //   name: "정남훈",
+        //   phoneNumber: "010-5056-1149",
+        //   address: "서울시 송파구 삼전동 176-11 401호",
+        //   isDefault: false
+        // },
+        // {
+        //   id: 2,
+        //   title: "회사",
+        //   name: "정남훈",
+        //   phoneNumber: "010-1111-3154",
+        //   address: "서울시 송파구 삼전동 176-11 402호",
+        //   isDefault: false
+        // }
       ],
       currentAddressId: null
     },
@@ -2782,8 +2782,10 @@ const createStore = () => {
         state.currentBuyerId = id;
       },
       addBuyer(state, payload) {
+        let id =
+          state.buyers.length == 0 ? 1 : Number(state.buyers[state.buyers.length - 1].id) + 1;
         let newBuyer = {
-          id: Number(state.buyers[state.buyers.length - 1].id) + 1,
+          id,
           ...payload
         };
         if (payload.isDefault) {
@@ -2802,8 +2804,10 @@ const createStore = () => {
         state.currentAddressId = id;
       },
       addAddress(state, payload) {
+        let id =
+          state.addresses.length == 0 ? 1 : state.addresses[state.addresses.length - 1].id + 1;
         let newAddress = {
-          id: Number(state.addresses[state.addresses.length - 1].id) + 1,
+          id,
           ...payload
         };
         if (payload.isDefault) {
