@@ -71,7 +71,7 @@ a {
     align-items: center;
     background-color: white;
     position: fixed;
-    z-index: 1;
+    z-index: 9999;
     margin: 0 -20px;
     padding: 0 20px;
   }
